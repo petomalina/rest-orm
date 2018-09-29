@@ -1,0 +1,21 @@
+{
+  "name": "rest-orm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gen": "ts-node ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^6.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^10.11.3",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.1"
+  }
+}
