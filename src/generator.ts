@@ -2,37 +2,39 @@ import { Model, ModelField, Relationship } from './models'
 
 export function generateFile(models: Model[]): string {
     return `
-    import * as models from './models'
-    import { Observable, Subscriber } from 'rxjs'
-    import { map } from 'rxjs/operators'
+import * as M from './models'
+import { Observable, Subscriber } from 'rxjs'
     
-    ${models.map(m => generateModel(m)).join('\n')}`
+${models.map(m => generateModel(m)).join('\n')}`
 }
 
 function generateModel(model: Model): string {
     return `
-    namespace ${model.name[0].toLowerCase() + model.name.slice(1)} {
+namespace ${model.name[0].toLowerCase() + model.name.slice(1)} {
+    export class API {
+        constructor(private url: string) {}
     
-        function create(models: ${model.name}[]): Observable<${model.name}[]> {
-        
+        create(models: M.${model.name}[]): Observable<M.${model.name}[]> {
+            return new Observable()
         }
     
-        function list(ids): Observable<${model.name}[]> {
-        
+        list(ids: string[]): Observable<M.${model.name}[]> {
+            return new Observable()
         }
         
-        function delete(ids): Observable<${model.name}[]> {
-        
+        delete(ids: string[]): Observable<M.${model.name}[]> {
+            return new Observable()
         }
-        
-        ${model.relationships.map(r => generateRelationship(r)).join('\n')}
-    }`
+    }
+    
+    ${model.relationships.map(r => generateRelationship(r)).join('\\n')}
+}`
 }
 
 function generateRelationship(rel: Relationship): string {
     return `
-    class With${rel.modelName}Subscriber extends Subscriber {
-        constructor(sub) {
+    class With${rel.modelName}Subscriber extends Subscriber<M.${rel.modelName}> {
+        constructor(sub: Subscriber<M.${rel.modelName}>) {
             super(sub)
         }
             
@@ -41,10 +43,10 @@ function generateRelationship(rel: Relationship): string {
         }
     }
     
-    export const with${rel.modelName} = source => {
-        source.lift({
-            call(sub, source) => {
-                source.subscribe(new With(${rel.modelName}Subscriber(sub))
+    export const with${rel.modelName}s = (src: Observable<M.${rel.modelName}>) => {
+        src.lift({
+            call(sub, source) {
+                source.subscribe(new With${rel.modelName}Subscriber(sub))
             }
         })
     }

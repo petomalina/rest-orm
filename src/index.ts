@@ -1,4 +1,5 @@
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync} from 'fs'
+import { join, dirname } from 'path'
 import { inspect } from 'util'
 
 import { Model } from './models'
@@ -67,7 +68,9 @@ function parseFile(f: string): Model[] {
     return models
 }
 
-const models = parseFile('./examples/bookstore/models.ts')
+const file = './examples/bookstore/models.ts'
+
+const models = parseFile(file)
 const out = generateFile(models)
 
-console.log(out)
+writeFileSync(join(dirname(file), 'orm.gen.ts'), out)
