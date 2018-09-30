@@ -29,7 +29,7 @@ function parseFile(f: string): Model[] {
             return acc
         }
 
-        const field = /(\w+) ?: ?(.*);/.exec(line)
+        const field = /(\w+) ?\??: ?(.*);/.exec(line)
         if (field && field.length > 1) {
             acc[acc.length-1].fields.push({
                 name: field[1],
