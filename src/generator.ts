@@ -2,7 +2,8 @@ import { Model, ModelField, Relationship } from './models'
 
 export function generateFile(models: Model[]): string {
     return `import * as M from './models'
-import { Observable, Subscriber } from 'rxjs'
+import { Observable, Subscriber, from } from 'rxjs'
+import { map } from 'rxjs/operators'
 import axios from 'axios'
 import { stringify } from 'querystring'
 
@@ -37,12 +38,10 @@ export namespace ${endpoint} {
     }
 
     export function list(query: any): Observable<M.${model.name}[]> {
-        return new Observable(sub => {
-            axios.get(\`\${endpoint()}?\${stringify(query)}\`)
-                .then(value => {
-                    sub.next(value.data)
-                })
-        })
+        return from(axios.get(\`\${endpoint()}?\${stringify(query)}\`))
+            .pipe(
+                map(v => v.data)
+            )
     }
     
     export function remove(ids: string[]): Observable<M.${model.name}[]> {
@@ -60,7 +59,7 @@ export namespace ${endpoint} {
 function generateRelationship(model: Model, rel: Relationship): string {
     return `
     class With${rel.modelName}Subscriber extends Subscriber<M.${model.name}[]> {
-        constructor(sub: Subscriber<M.${model.name}[]>) {
+        constructor(sub: Subscriber<M.${model.name}[]>, private ops: SameOperator<M.${rel.modelName}[]>[]) {
             super(sub)
         }
             
@@ -72,17 +71,25 @@ function generateRelationship(model: Model, rel: Relationship): string {
                 return acc
             }, []).join('&')
             
-            axios.get(\`\${relationshipEndpoint}?\${query}\`)
-                .then(value => {
-                    (<any>this.destination).next(value.data)
-                })
+            let $o = from(axios.get(\`\${relationshipEndpoint}?\${query}\`))
+                .pipe(
+                    map(v => <M.${rel.modelName}[]>(v.data)),
+                )
+
+            for (const op of this.ops) {
+                $o = $o.pipe(op)
+            }
+
+            $o.subscribe(val => {
+                (<any>this.destination).next(val)
+            })
         }
     }
     
     export const with${rel.modelName}s = (...ops: SameOperator<M.${rel.modelName}[]>[]) => (src: Observable<M.${model.name}[]>): Observable<M.${model.name}[]> => {
         return src.lift({
             call(sub, source) {
-                source.subscribe(new With${rel.modelName}Subscriber(sub))
+                source.subscribe(new With${rel.modelName}Subscriber(sub, ops))
             }
         })
     }
