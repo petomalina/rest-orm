@@ -1,4 +1,5 @@
 import * as express from 'express'
+import * as morgan from 'morgan'
 import {Request, Response} from "express"
 import * as bodyParser from 'body-parser'
 
@@ -102,6 +103,7 @@ class App {
 
         this.app.use(bodyParser.json())
         this.app.use(bodyParser.urlencoded({extended: true}))
+        this.app.use(morgan('combined'))
 
         this.addMockData()
         this.constructRouting()
@@ -157,52 +159,62 @@ class App {
             {
                 "id": "a5de121f-ceb6-407c-87bd-32d28917005d",
                 "name": "Lenore in the Dale",
-                "description": "Laboris deserunt minim ullamco eu est velit esse do ipsum irure anim esse reprehenderit. Ex fugiat mollit ad Lorem. Aliqua magna laborum labore deserunt enim ad ea duis reprehenderit elit do. Et qui anim ut aliquip tempor incididunt mollit aute incididunt culpa non dolor incididunt."
+                "description": "Laboris deserunt minim ullamco eu est velit esse do ipsum irure anim esse reprehenderit. Ex fugiat mollit ad Lorem. Aliqua magna laborum labore deserunt enim ad ea duis reprehenderit elit do. Et qui anim ut aliquip tempor incididunt mollit aute incididunt culpa non dolor incididunt.",
+                userId: "e2c0ccee-530f-45fb-87f6-6205074228d7"
             },
             {
                 "id": "66a182be-731a-49f9-8dfe-ba89b6570382",
                 "name": "Armstrong in the Oley",
-                "description": "Ipsum commodo laboris proident dolor proident occaecat esse officia qui. Consequat nostrud eu esse culpa minim officia nostrud ut in anim mollit. Cillum aliquip ea consectetur ea aute ullamco laborum qui nostrud veniam ullamco. Qui duis ad velit consectetur occaecat amet."
+                "description": "Ipsum commodo laboris proident dolor proident occaecat esse officia qui. Consequat nostrud eu esse culpa minim officia nostrud ut in anim mollit. Cillum aliquip ea consectetur ea aute ullamco laborum qui nostrud veniam ullamco. Qui duis ad velit consectetur occaecat amet.",
+                userId: "e2c0ccee-530f-45fb-87f6-6205074228d7"
             },
             {
                 "id": "8ad9a351-f6ac-4b65-950f-d72fdfd55155",
                 "name": "Jeannette in the Avalon",
-                "description": "Et veniam laboris dolor occaecat aute amet incididunt aute excepteur cillum. Officia ea aliqua ipsum sint anim amet Lorem dolor qui irure quis ut excepteur amet. Quis sint voluptate quis laboris laborum do ad tempor in elit ad qui duis deserunt. Pariatur commodo labore nisi aliqua laborum aliqua sint ut amet."
+                "description": "Et veniam laboris dolor occaecat aute amet incididunt aute excepteur cillum. Officia ea aliqua ipsum sint anim amet Lorem dolor qui irure quis ut excepteur amet. Quis sint voluptate quis laboris laborum do ad tempor in elit ad qui duis deserunt. Pariatur commodo labore nisi aliqua laborum aliqua sint ut amet.",
+                userId: "657ff218-636f-4862-ade8-b29055ee6bb2"
             },
             {
                 "id": "efd2f921-d41e-4afd-9e65-c3375d074dc5",
                 "name": "Miriam in the Welda",
-                "description": "Excepteur exercitation laborum aliqua fugiat nisi eiusmod dolore. Eiusmod sunt aute dolore eiusmod cillum nulla aute laboris ea nisi reprehenderit cupidatat. Adipisicing id consequat incididunt id minim sint culpa nulla amet ipsum laborum quis duis. Excepteur consequat ullamco sunt nisi mollit sunt velit aliquip."
+                "description": "Excepteur exercitation laborum aliqua fugiat nisi eiusmod dolore. Eiusmod sunt aute dolore eiusmod cillum nulla aute laboris ea nisi reprehenderit cupidatat. Adipisicing id consequat incididunt id minim sint culpa nulla amet ipsum laborum quis duis. Excepteur consequat ullamco sunt nisi mollit sunt velit aliquip.",
+                userId: "8cfda087-e09b-4439-baa8-23885a1361c7"
             },
             {
                 "id": "58ef5491-4e31-47d1-afa4-ea0c83e8caff",
                 "name": "Barry in the Cresaptown",
-                "description": "Officia enim eiusmod laboris dolore excepteur ex velit consequat. Aliqua eiusmod labore cillum ea ex in. Occaecat voluptate cupidatat duis sint do eiusmod ut ex officia nostrud proident deserunt. Ut minim ad cillum id adipisicing id irure qui occaecat."
+                "description": "Officia enim eiusmod laboris dolore excepteur ex velit consequat. Aliqua eiusmod labore cillum ea ex in. Occaecat voluptate cupidatat duis sint do eiusmod ut ex officia nostrud proident deserunt. Ut minim ad cillum id adipisicing id irure qui occaecat.",
+                userId: "8cfda087-e09b-4439-baa8-23885a1361c7"
             },
             {
                 "id": "5cfb1771-0969-4d8b-8c86-b4380f38c5a7",
                 "name": "Melton in the Whitestone",
-                "description": "Est id officia nisi est laboris quis. Labore pariatur elit laborum ea nulla labore. Anim irure laborum pariatur non pariatur non culpa Lorem cupidatat reprehenderit. Velit anim tempor in cupidatat officia pariatur enim amet esse occaecat."
+                "description": "Est id officia nisi est laboris quis. Labore pariatur elit laborum ea nulla labore. Anim irure laborum pariatur non pariatur non culpa Lorem cupidatat reprehenderit. Velit anim tempor in cupidatat officia pariatur enim amet esse occaecat.",
+                userId: "113c55cd-bf92-410b-b860-722b1d331d9a"
             },
             {
                 "id": "982b2a41-2916-4932-b769-4eecfbf6ae9d",
                 "name": "Minnie in the Robbins",
-                "description": "In in incididunt occaecat amet sint eiusmod anim. Eiusmod nostrud dolor occaecat laboris incididunt qui minim sint ex voluptate. Anim laboris irure cillum sit excepteur ex veniam proident. Non est eu nostrud anim sint ex do eu ullamco qui."
+                "description": "In in incididunt occaecat amet sint eiusmod anim. Eiusmod nostrud dolor occaecat laboris incididunt qui minim sint ex voluptate. Anim laboris irure cillum sit excepteur ex veniam proident. Non est eu nostrud anim sint ex do eu ullamco qui.",
+                userId: "113c55cd-bf92-410b-b860-722b1d331d9a"
             },
             {
                 "id": "cdf106fb-492b-4866-a4bb-a1c46c55a9bd",
                 "name": "Chandra in the Waterloo",
-                "description": "Anim est eu magna duis. Sint id duis aliquip quis commodo commodo sint elit ea. Aliquip enim aute exercitation proident voluptate sint magna. Velit ad sint aute enim."
+                "description": "Anim est eu magna duis. Sint id duis aliquip quis commodo commodo sint elit ea. Aliquip enim aute exercitation proident voluptate sint magna. Velit ad sint aute enim.",
+                userId: "199ec702-2593-4731-947a-1c4ddd712870"
             },
             {
                 "id": "445008cd-06b1-4f02-a0fa-d022aac76a26",
                 "name": "Augusta in the Walton",
-                "description": "Proident eu proident qui veniam tempor irure. Dolor sunt tempor nostrud duis amet proident et laboris ex deserunt. Lorem eu duis cillum reprehenderit sit pariatur officia magna non est dolore laboris. Exercitation ullamco qui ut consequat ullamco do tempor adipisicing velit eu."
+                "description": "Proident eu proident qui veniam tempor irure. Dolor sunt tempor nostrud duis amet proident et laboris ex deserunt. Lorem eu duis cillum reprehenderit sit pariatur officia magna non est dolore laboris. Exercitation ullamco qui ut consequat ullamco do tempor adipisicing velit eu.",
+                userId: "199ec702-2593-4731-947a-1c4ddd712870"
             },
             {
                 "id": "1965b13d-85d4-4cee-9285-d16c4fc33a41",
                 "name": "Melissa in the Goochland",
-                "description": "Nulla quis excepteur deserunt voluptate reprehenderit reprehenderit culpa dolor non velit. Deserunt ad culpa consequat et cupidatat minim ad. Ex veniam aliquip fugiat cillum consectetur labore adipisicing in dolor ipsum in eiusmod pariatur proident. Aliquip sit officia est sint ex elit."
+                "description": "Nulla quis excepteur deserunt voluptate reprehenderit reprehenderit culpa dolor non velit. Deserunt ad culpa consequat et cupidatat minim ad. Ex veniam aliquip fugiat cillum consectetur labore adipisicing in dolor ipsum in eiusmod pariatur proident. Aliquip sit officia est sint ex elit.",
+                userId: "9dfa45b3-1c8a-449d-a39f-f789bb712ca3"
             }
         ]
 

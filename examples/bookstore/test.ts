@@ -1,8 +1,14 @@
-import { user } from './orm.gen'
+import {users, setApiUrl} from './orm.gen'
 
-const api = new user.API('http://localhost:8080/users')
+setApiUrl('http://localhost:8080')
 
-api.list([])
+users
+    .list({
+        id: "e2c0ccee-530f-45fb-87f6-6205074228d7"
+    })
+    .pipe(
+        users.withBooks
+    )
     .subscribe({
         next: value => console.log(value),
         error: value => console.log(value)
