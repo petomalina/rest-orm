@@ -6,6 +6,7 @@ import { Observable, Subscriber } from 'rxjs'
 import axios from 'axios'
 import { stringify } from 'querystring'
 
+type SameOperator<T> = (i: Observable<T>) => Observable<T>;
 
 let API_URL = ''
 
@@ -59,7 +60,7 @@ export namespace ${endpoint} {
 function generateRelationship(model: Model, rel: Relationship): string {
     return `
     class With${rel.modelName}Subscriber extends Subscriber<M.${model.name}[]> {
-        constructor(sub: Subscriber<M.${model.name}>) {
+        constructor(sub: Subscriber<M.${model.name}[]>) {
             super(sub)
         }
             
@@ -78,7 +79,7 @@ function generateRelationship(model: Model, rel: Relationship): string {
         }
     }
     
-    export const with${rel.modelName}s = (src: Observable<M.${model.name}[]>) => {
+    export const with${rel.modelName}s = (...ops: SameOperator<M.${rel.modelName}[]>[]) => (src: Observable<M.${model.name}[]>): Observable<M.${model.name}[]> => {
         return src.lift({
             call(sub, source) {
                 source.subscribe(new With${rel.modelName}Subscriber(sub))

@@ -3,6 +3,7 @@ import { Observable, Subscriber } from 'rxjs'
 import axios from 'axios'
 import { stringify } from 'querystring'
 
+type SameOperator<T> = (i: Observable<T>) => Observable<T>;
 
 let API_URL = ''
 
@@ -45,7 +46,7 @@ export namespace users {
     }
     
     class WithBookSubscriber extends Subscriber<M.User[]> {
-        constructor(sub: Subscriber<M.User>) {
+        constructor(sub: Subscriber<M.User[]>) {
             super(sub)
         }
             
@@ -64,7 +65,7 @@ export namespace users {
         }
     }
     
-    export const withBooks = (src: Observable<M.User[]>) => {
+    export const withBooks = (...ops: SameOperator<M.Book[]>[]) => (src: Observable<M.User[]>): Observable<M.User[]> => {
         return src.lift({
             call(sub, source) {
                 source.subscribe(new WithBookSubscriber(sub))
@@ -109,7 +110,7 @@ export namespace books {
     }
     
     class WithAuthorSubscriber extends Subscriber<M.Book[]> {
-        constructor(sub: Subscriber<M.Book>) {
+        constructor(sub: Subscriber<M.Book[]>) {
             super(sub)
         }
             
@@ -128,7 +129,7 @@ export namespace books {
         }
     }
     
-    export const withAuthors = (src: Observable<M.Book[]>) => {
+    export const withAuthors = (...ops: SameOperator<M.Author[]>[]) => (src: Observable<M.Book[]>): Observable<M.Book[]> => {
         return src.lift({
             call(sub, source) {
                 source.subscribe(new WithAuthorSubscriber(sub))
