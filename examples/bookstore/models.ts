@@ -12,10 +12,14 @@ export interface Book {
     name: string;
     description: string;
 
+    userId?: string
+
     authors?: Author[];
 }
 
 export interface Author {
     id: string;
     name: string;
+
+    bookId?: string;
 }

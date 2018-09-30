@@ -3,7 +3,6 @@ import {Request, Response} from "express"
 import * as bodyParser from 'body-parser'
 
 import {User, Book, Author} from '../../bookstore/models'
-import {author} from "../../bookstore/orm.gen";
 
 interface Model {
     id: string;
@@ -24,8 +23,27 @@ class Store<T extends Model> {
         return t
     }
 
-    list(query?: any): T[] {
-        return this.store
+    list(query?: { [key: string]: any }): T[] {
+        if (!query || Object.keys(query).length <= 0) {
+            return this.store
+        }
+
+        return this.store.filter(m => {
+            for (const key in query) {
+                if (query[key] instanceof Array) {
+                    if (query[key].includes((<any>m)[key])) {
+                        return true
+                    }
+                } else {
+                    // supports { id: 'abc' }
+                    if (query[key] == (<any>m)[key]) {
+                        return true
+                    }
+                }
+            }
+
+            return false
+        })
     }
 
     // update will update the object or create a new one
@@ -50,12 +68,13 @@ class Store<T extends Model> {
 }
 
 class Router<T extends Model> {
-    constructor(private prefix: string, private store: Store<T>) {}
+    constructor(private prefix: string, private store: Store<T>) {
+    }
 
     register(app: express.Application) {
         app.route(this.prefix)
             .get((req: Request, res: Response) => {
-                res.json(this.store.list())
+                res.json(this.store.list(req.query))
             })
             // create or update
             .post((req: Request, res: Response) => {
@@ -67,11 +86,6 @@ class Router<T extends Model> {
             })
             .delete((req: Request, res: Response) => {
                 res.json(this.store.delete(req.body))
-            })
-
-        app.route(`${this.prefix}/:id`)
-            .get((req: Request, res: Response) => {
-
             })
     }
 }
