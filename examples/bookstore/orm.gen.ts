@@ -27,7 +27,7 @@ export namespace users {
         })
     }
 
-    export function list(query: any): Observable<M.User[]> {
+    export function list(query?: any): Observable<M.User[]> {
         return new Observable(sub => {
             const value = axios.get(`${endpoint()}?${stringify(query)}`)
                 .then(value => {
@@ -117,7 +117,7 @@ export namespace books {
         })
     }
 
-    export function list(query: any): Observable<M.Book[]> {
+    export function list(query?: any): Observable<M.Book[]> {
         return new Observable(sub => {
             const value = axios.get(`${endpoint()}?${stringify(query)}`)
                 .then(value => {
@@ -207,7 +207,7 @@ export namespace authors {
         })
     }
 
-    export function list(query: any): Observable<M.Author[]> {
+    export function list(query?: any): Observable<M.Author[]> {
         return new Observable(sub => {
             const value = axios.get(`${endpoint()}?${stringify(query)}`)
                 .then(value => {

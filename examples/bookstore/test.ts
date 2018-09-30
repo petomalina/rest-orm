@@ -1,5 +1,6 @@
 import {users, setApiUrl, books} from './orm.gen'
 import {inspect} from "util";
+import {map} from "rxjs/operators";
 
 setApiUrl('http://localhost:8080')
 
@@ -9,7 +10,12 @@ users
     })
     .pipe(
         users.withBooks(
-            books.withAuthors()
+            books.withAuthors(
+                map(authors => authors.map(author => {
+                    author.name = 'Duck Duckinson';
+                    return author;
+                }))
+            )
         )
     )
     .subscribe({

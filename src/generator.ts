@@ -36,7 +36,7 @@ export namespace ${endpoint} {
         })
     }
 
-    export function list(query: any): Observable<M.${model.name}[]> {
+    export function list(query?: any): Observable<M.${model.name}[]> {
         return new Observable(sub => {
             const value = axios.get(\`\${endpoint()}?\${stringify(query)}\`)
                 .then(value => {
