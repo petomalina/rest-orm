@@ -3,7 +3,6 @@ import { Model, ModelField, Relationship } from './models'
 export function generateFile(models: Model[]): string {
     return `import * as M from './models'
 import { Observable, Subscriber, from } from 'rxjs'
-import { map } from 'rxjs/operators'
 import axios from 'axios'
 import { stringify } from 'querystring'
 
@@ -38,10 +37,12 @@ export namespace ${endpoint} {
     }
 
     export function list(query: any): Observable<M.${model.name}[]> {
-        return from(axios.get(\`\${endpoint()}?\${stringify(query)}\`))
-            .pipe(
-                map(v => v.data)
-            )
+        return new Observable(sub => {
+            const value = axios.get(\`\${endpoint()}?\${stringify(query)}\`)
+                .then(value => {
+                    sub.next(value.data)
+                })
+        })
     }
     
     export function remove(ids: string[]): Observable<M.${model.name}[]> {
@@ -71,17 +72,35 @@ function generateRelationship(model: Model, rel: Relationship): string {
                 return acc
             }, []).join('&')
             
-            let $o = from(axios.get(\`\${relationshipEndpoint}?\${query}\`))
-                .pipe(
-                    map(v => <M.${rel.modelName}[]>(v.data)),
-                )
-
+            let $o = new Observable<M.${rel.modelName}[]>(sub => {
+                axios.get(\`\${relationshipEndpoint}?\${query}\`)
+                    .then(value => sub.next(value.data))
+            })
+            
             for (const op of this.ops) {
                 $o = $o.pipe(op)
             }
 
             $o.subscribe(val => {
-                (<any>this.destination).next(val)
+                // perform linking
+                for (const model of val) {
+                    const link = ${pluralize(model.name)}.find(${uncapitalize(model.name)} => {
+                        return ${uncapitalize(model.name)}.id == model.${uncapitalize(model.name)}Id
+                    })
+
+                    if (!link) {
+                        console.log('Could not link:', model)
+                        continue
+                    }
+
+                    if (!link.${pluralize(rel.modelName)}) {
+                        link.${pluralize(rel.modelName)} = []
+                    }
+
+                    link.${pluralize(rel.modelName)}.push(model)
+                }
+                
+                (<any>this.destination).next(${pluralize(model.name)})
             })
         }
     }

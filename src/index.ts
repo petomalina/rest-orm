@@ -1,6 +1,5 @@
 import { readFileSync, writeFileSync} from 'fs'
 import { join, dirname } from 'path'
-import { inspect } from 'util'
 
 import { Model } from './models'
 
@@ -62,8 +61,6 @@ function parseFile(f: string): Model[] {
             })
         })
     })
-
-    console.log(inspect(models, false, null, true))
 
     return models
 }

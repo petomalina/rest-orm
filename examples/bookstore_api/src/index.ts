@@ -221,39 +221,48 @@ class App {
         const authorMocks: Author[] = [
             {
                 "id": "ce84be54-d4d5-4aaf-83fb-381f7955ab13",
-                "name": "Marie Franks Day"
+                "name": "Marie Franks Day",
+                bookId: "a5de121f-ceb6-407c-87bd-32d28917005d"
             },
             {
                 "id": "3162ebf1-e4eb-47a5-991c-58531a3c3a5c",
-                "name": "Kay Singleton Henderson"
+                "name": "Kay Singleton Henderson",
+                bookId: "a5de121f-ceb6-407c-87bd-32d28917005d"
             },
             {
                 "id": "5c989164-3713-4609-a4c2-ded7836e6c8b",
-                "name": "Mona Austin Perkins"
+                "name": "Mona Austin Perkins",
+                bookId: "66a182be-731a-49f9-8dfe-ba89b6570382"
             },
             {
                 "id": "f2daa7da-746c-4aa4-bd00-988505b1b813",
-                "name": "Shana Diaz Bird"
+                "name": "Shana Diaz Bird",
+                bookId: "8ad9a351-f6ac-4b65-950f-d72fdfd55155",
             },
             {
                 "id": "39e41ed0-bb59-482f-9cac-f2d3092564ef",
-                "name": "Natasha Watkins Harper"
+                "name": "Natasha Watkins Harper",
+                bookId: "8ad9a351-f6ac-4b65-950f-d72fdfd55155",
             },
             {
                 "id": "a50c83b0-e101-4a48-ac38-c618db217968",
-                "name": "Banks Cantu Keller"
+                "name": "Banks Cantu Keller",
+                bookId: "efd2f921-d41e-4afd-9e65-c3375d074dc5"
             },
             {
                 "id": "2dd57145-c8d0-409c-883e-211415129687",
-                "name": "Darla Williamson Marshall"
+                "name": "Darla Williamson Marshall",
+                bookId: "58ef5491-4e31-47d1-afa4-ea0c83e8caff"
             },
             {
                 "id": "92aac86a-a716-44fe-af98-f09f8834ec8f",
-                "name": "Murphy Farrell Slater"
+                "name": "Murphy Farrell Slater",
+                bookId: "5cfb1771-0969-4d8b-8c86-b4380f38c5a7"
             },
             {
                 "id": "ea1b6866-19c3-49c8-9fd3-06f0634527b2",
-                "name": "Carmela Glover Humphrey"
+                "name": "Carmela Glover Humphrey",
+                bookId: "982b2a41-2916-4932-b769-4eecfbf6ae9d"
             }
         ]
 

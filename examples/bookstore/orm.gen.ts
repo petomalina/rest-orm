@@ -1,6 +1,5 @@
 import * as M from './models'
 import { Observable, Subscriber, from } from 'rxjs'
-import { map } from 'rxjs/operators'
 import axios from 'axios'
 import { stringify } from 'querystring'
 
@@ -29,10 +28,12 @@ export namespace users {
     }
 
     export function list(query: any): Observable<M.User[]> {
-        return from(axios.get(`${endpoint()}?${stringify(query)}`))
-            .pipe(
-                map(v => v.data)
-            )
+        return new Observable(sub => {
+            const value = axios.get(`${endpoint()}?${stringify(query)}`)
+                .then(value => {
+                    sub.next(value.data)
+                })
+        })
     }
     
     export function remove(ids: string[]): Observable<M.User[]> {
@@ -56,32 +57,44 @@ export namespace users {
                 acc.push(`userId=${user.id}`)
                 return acc
             }, []).join('&')
-
-            axios.get(`${relationshipEndpoint}?${query}`)
-                .then(value => {
-                    (<any>this.destination).next(value.data)
-                })
             
-            // let $o = from(axios.get(`${relationshipEndpoint}?${query}`))
-            //     .pipe(
-            //         map(v => <M.Book[]>(v.data)),
-            //     )
-            //
-            // for (const op of this.ops) {
-            //     $o = $o.pipe(op)
-            // }
-            //
-            // $o.subscribe(val => {
-            //     console.log('books');
-            //     (<any>this.destination).next(val)
-            // })
+            let $o = new Observable<M.Book[]>(sub => {
+                axios.get(`${relationshipEndpoint}?${query}`)
+                    .then(value => sub.next(value.data))
+            })
+            
+            for (const op of this.ops) {
+                $o = $o.pipe(op)
+            }
+
+            $o.subscribe(val => {
+                // perform linking
+                for (const model of val) {
+                    const link = users.find(user => {
+                        return user.id == model.userId
+                    })
+
+                    if (!link) {
+                        console.log('Could not link:', model)
+                        continue
+                    }
+
+                    if (!link.books) {
+                        link.books = []
+                    }
+
+                    link.books.push(model)
+                }
+                
+                (<any>this.destination).next(users)
+            })
         }
     }
     
-    export const withBooks = (src: Observable<M.User[]>): Observable<M.User[]> => {
+    export const withBooks = (...ops: SameOperator<M.Book[]>[]) => (src: Observable<M.User[]>): Observable<M.User[]> => {
         return src.lift({
             call(sub, source) {
-                source.subscribe(new WithBookSubscriber(sub, []))
+                source.subscribe(new WithBookSubscriber(sub, ops))
             }
         })
     }
@@ -105,10 +118,12 @@ export namespace books {
     }
 
     export function list(query: any): Observable<M.Book[]> {
-        return from(axios.get(`${endpoint()}?${stringify(query)}`))
-            .pipe(
-                map(v => v.data)
-            )
+        return new Observable(sub => {
+            const value = axios.get(`${endpoint()}?${stringify(query)}`)
+                .then(value => {
+                    sub.next(value.data)
+                })
+        })
     }
     
     export function remove(ids: string[]): Observable<M.Book[]> {
@@ -133,17 +148,35 @@ export namespace books {
                 return acc
             }, []).join('&')
             
-            let $o = from(axios.get(`${relationshipEndpoint}?${query}`))
-                .pipe(
-                    map(v => <M.Author[]>(v.data)),
-                )
-
+            let $o = new Observable<M.Author[]>(sub => {
+                axios.get(`${relationshipEndpoint}?${query}`)
+                    .then(value => sub.next(value.data))
+            })
+            
             for (const op of this.ops) {
                 $o = $o.pipe(op)
             }
 
             $o.subscribe(val => {
-                (<any>this.destination).next(val)
+                // perform linking
+                for (const model of val) {
+                    const link = books.find(book => {
+                        return book.id == model.bookId
+                    })
+
+                    if (!link) {
+                        console.log('Could not link:', model)
+                        continue
+                    }
+
+                    if (!link.authors) {
+                        link.authors = []
+                    }
+
+                    link.authors.push(model)
+                }
+                
+                (<any>this.destination).next(books)
             })
         }
     }
@@ -175,10 +208,12 @@ export namespace authors {
     }
 
     export function list(query: any): Observable<M.Author[]> {
-        return from(axios.get(`${endpoint()}?${stringify(query)}`))
-            .pipe(
-                map(v => v.data)
-            )
+        return new Observable(sub => {
+            const value = axios.get(`${endpoint()}?${stringify(query)}`)
+                .then(value => {
+                    sub.next(value.data)
+                })
+        })
     }
     
     export function remove(ids: string[]): Observable<M.Author[]> {
