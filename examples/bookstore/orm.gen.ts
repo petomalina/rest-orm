@@ -56,26 +56,32 @@ export namespace users {
                 acc.push(`userId=${user.id}`)
                 return acc
             }, []).join('&')
+
+            axios.get(`${relationshipEndpoint}?${query}`)
+                .then(value => {
+                    (<any>this.destination).next(value.data)
+                })
             
-            let $o = from(axios.get(`${relationshipEndpoint}?${query}`))
-                .pipe(
-                    map(v => <M.Book[]>(v.data)),
-                )
-
-            for (const op of this.ops) {
-                $o = $o.pipe(op)
-            }
-
-            $o.subscribe(val => {
-                (<any>this.destination).next(val)
-            })
+            // let $o = from(axios.get(`${relationshipEndpoint}?${query}`))
+            //     .pipe(
+            //         map(v => <M.Book[]>(v.data)),
+            //     )
+            //
+            // for (const op of this.ops) {
+            //     $o = $o.pipe(op)
+            // }
+            //
+            // $o.subscribe(val => {
+            //     console.log('books');
+            //     (<any>this.destination).next(val)
+            // })
         }
     }
     
-    export const withBooks = (...ops: SameOperator<M.Book[]>[]) => (src: Observable<M.User[]>): Observable<M.User[]> => {
+    export const withBooks = (src: Observable<M.User[]>): Observable<M.User[]> => {
         return src.lift({
             call(sub, source) {
-                source.subscribe(new WithBookSubscriber(sub, ops))
+                source.subscribe(new WithBookSubscriber(sub, []))
             }
         })
     }
